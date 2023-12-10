@@ -1,6 +1,8 @@
 # Information Management 2 Project
 
+
 A project submission to CSIT327 - Information Management
+
 
 Project Contributors:
 <ul>
