@@ -1,0 +1,11 @@
+To start the virtual environment run this command:
+.\venv\Scripts\Activate.ps1
+
+it should run like this in the next line:
+--> (venv) PS C:\Users\user\Documents\CCS-3\im2-app>
+
+To push to heroku do this:
+
+> git add .
+> git commit -m "Commit Message Here"
+> git push heroku main
