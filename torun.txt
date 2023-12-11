@@ -1,5 +1,6 @@
 To start the virtual environment run this command:
-.\venv\Scripts\Activate.ps1
+( for windows )> .\venv\Scripts\Activate.ps1
+( for mac )> source venv/bin/activate
 
 it should run like this in the next line:
 --> (venv) PS C:\Users\user\Documents\CCS-3\im2-app>
