@@ -72,7 +72,9 @@ def create_view(): # VIEW
 def index():
     result = db.session.execute(text('SELECT * FROM category_summary'))
     categories = [{'category': row[0], 'count': row[1]} for row in result]
+    categories.sort(key=lambda x: x['count'], reverse=True)
     return render_template('index.html', categories=categories)
+
     
 @app.route('/furniture', methods=['POST', 'GET'])
 def furniture():
