@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align: center">Furniture</h1>
+    <form action="/furniture" method="post">
+        <input type="text" name="furniture_name" placeholder="Furniture Name" required>
+        <input type="text" name="furniture_type" placeholder="Furniture Type" required>
+        <input type="number" step="any" name="furniture_weight" placeholder="Weight" required>
+        <input type="number" step="any" name="furniture_price" placeholder="Price" required>
+        <input type="submit" value="Add Entry">
+    </form>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Weight</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+        {% for item in furniture_items %}
+            <tr>
+                <td>{{ item.furniture_id }}</td>
+                <td>{{ item.furniture_name }}</td>
+                <td>{{ item.furniture_type }}</td>
+                <td>{{ item.furniture_weight }} kg</td>
+                <td>₱ {{ item.furniture_price }}</td>
+                <td>
+                    <a href="/delete/furniture/{{item.furniture_id}}">Delete</a>
+                    <br>
+                    <a href="/update/furniture/{{item.furniture_id}}">Update</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

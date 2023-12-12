@@ -5,33 +5,24 @@
 
 {% block body %}
 <div class="content">
-    <h1 style="text-align:center">Task Master</h1>
-    {% if tasks|length < 1 %}
-    <h4 style="text-align:center">There are no tasks available. create one below.</h4>
-    {% else %}
+    <h1 style="text-align:center">Inventory Management</h1>
     <table>
         <tr>
-            <th>Task</th>
-            <th>Added</th>
+            <th>Rank</th>
+            <th>Category</th>
+            <th>Entries</th>
             <th>Actions</th>
         </tr>
-        {% for task in tasks %}
+        {% for category in categories %}
             <tr>
-                <td>{{ task.content }}</td>
-                <td>{{ task.date_created.date() }}</td>
+                <td>{{ loop.index }}</td>
+                <td>{{ category.category }}</td>
+                <td>{{ category.count }}</td>
                 <td>
-                    <a href="/delete/{{task.id}}">Delete</a>
-                    <br>
-                    <a href="/update/{{task.id}}">Update</a>
+                    <a href="/{{ category.category|lower }}">View</a>
                 </td>
             </tr>
         {% endfor %}
     </table>
-    {% endif %}
-
-    <form action="/" method="POST">
-        <input type="text" name="content" id="content">
-        <input type="submit" value="Add Task">
-    </form>
 </div>
 {% endblock %}
