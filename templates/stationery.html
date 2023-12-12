@@ -1,8 +1,44 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
 {% block head %}
 {% endblock %}
 
 {% block body %}
-<h1>Stationery</h1>
+<div class="content">
+    <h1 style="text-align: center">Stationery</h1>
+    <form action="/stationery" method="post">
+        <input type="text" name="stationery_name" placeholder="Stationery Name" required>
+        <input type="text" name="stationery_brand" placeholder="Brand" required>
+        <input type="text" name="stationery_type" placeholder="Type" required>
+        <input type="number" name="stationery_quantity" placeholder="Quantity" required>
+        <input type="number" step="any" name="stationery_price" placeholder="Price" required>
+        <input type="submit" value="Add Entry">
+    </form>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Brand</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+        {% for item in stationery_items %}
+            <tr>
+                <td>{{ item.stationery_id }}</td>
+                <td>{{ item.stationery_name }}</td>
+                <td>{{ item.stationery_brand }}</td>
+                <td>{{ item.stationery_type }}</td>
+                <td>{{ item.stationery_quantity }}</td>
+                <td>$ {{ item.stationery_price }}</td>
+                <td>
+                    <a href="/delete/stationery/{{item.stationery_id}}">Delete</a>
+                    <br>
+                    <a href="/update/stationery/{{item.stationery_id}}">Update</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}

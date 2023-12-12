@@ -51,7 +51,7 @@ class Stationery(db.Model):
     def __repr__(self):
         return '<Stationery %r>' % self.id
 
-def create_view():
+def create_view(): # VIEW
     with app.app_context():
         view_query = text("""
         CREATE VIEW IF NOT EXISTS category_summary AS 
@@ -99,17 +99,93 @@ def furniture():
     furniture_items = Furniture.query.all()
     return render_template('furniture.html', furniture_items=furniture_items)
     
-@app.route('/shoes')
+@app.route('/shoes', methods=['POST', 'GET'])
 def shoes():
-        return render_template('shoes.html')
+    if request.method == 'POST':
+        shoes_name = request.form.get('shoes_name')
+        shoes_brand = request.form.get('shoes_brand')
+        shoes_size = request.form.get('shoes_size')
+        shoes_gender = request.form.get('shoes_gender')
+        shoes_color = request.form.get('shoes_color')
+        shoes_price = request.form.get('shoes_price')
+        
+        if shoes_name and shoes_brand and shoes_size and shoes_gender and shoes_color and shoes_price:
+            try:
+                new_shoes = Shoes(
+                    shoes_name=shoes_name,
+                    shoes_brand=shoes_brand,
+                    shoes_size=int(shoes_size),
+                    shoes_gender=shoes_gender,
+                    shoes_color=shoes_color,
+                    shoes_price=float(shoes_price)
+                )
+                db.session.add(new_shoes)
+                db.session.commit()
+                return redirect('/shoes')
+            except Exception as e:
+                return f'An error occurred when adding the shoes: {e}'
     
-@app.route('/appliances')
+    shoes_items = Shoes.query.all()
+    return render_template('shoes.html', shoes_items=shoes_items)
+
+    
+@app.route('/appliances', methods=['POST', 'GET'])
 def appliances():
-        return render_template('appliances.html')
+    if request.method == 'POST':
+        appliance_name = request.form.get('appliance_name')
+        appliance_type = request.form.get('appliance_type')
+        appliance_brand = request.form.get('appliance_brand')
+        appliance_weight = request.form.get('appliance_weight')
+        appliance_voltage = request.form.get('appliance_voltage')
+        appliance_price = request.form.get('appliance_price')
+        
+        if appliance_name and appliance_type and appliance_brand and appliance_weight and appliance_voltage and appliance_price:
+            try:
+                new_appliance = Appliances(
+                    appliance_name=appliance_name,
+                    appliance_type=appliance_type,
+                    appliance_brand=appliance_brand,
+                    appliance_weight=float(appliance_weight),
+                    appliance_voltage=int(appliance_voltage),
+                    appliance_price=float(appliance_price)
+                )
+                db.session.add(new_appliance)
+                db.session.commit()
+                return redirect('/appliances')
+            except Exception as e:
+                return f'An error occurred when adding the appliance: {e}'
     
-@app.route('/stationery')
+    appliances_items = Appliances.query.all()
+    return render_template('appliances.html', appliances_items=appliances_items)
+
+    
+@app.route('/stationery', methods=['POST', 'GET'])
 def stationery():
-        return render_template('stationery.html')
+    if request.method == 'POST':
+        stationery_name = request.form.get('stationery_name')
+        stationery_brand = request.form.get('stationery_brand')
+        stationery_type = request.form.get('stationery_type')
+        stationery_quantity = request.form.get('stationery_quantity')
+        stationery_price = request.form.get('stationery_price')
+        
+        if stationery_name and stationery_brand and stationery_type and stationery_quantity and stationery_price:
+            try:
+                new_stationery = Stationery(
+                    stationery_name=stationery_name,
+                    stationery_brand=stationery_brand,
+                    stationery_type=stationery_type,
+                    stationery_quantity=int(stationery_quantity),
+                    stationery_price=float(stationery_price)
+                )
+                db.session.add(new_stationery)
+                db.session.commit()
+                return redirect('/stationery')
+            except Exception as e:
+                return f'An error occurred when adding the stationery: {e}'
+    
+    stationery_items = Stationery.query.all()
+    return render_template('stationery.html', stationery_items=stationery_items)
+
     
 def get_model_by_category(category):
     if category == 'furniture':
@@ -157,6 +233,68 @@ def furnitureUpdate(id):
     else:
         return render_template('furnitureupdate.html', item=furniture_item)
     
+@app.route('/update/shoes/<int:id>', methods=['GET', 'POST'])
+def shoesUpdate(id):
+    shoes_item = Shoes.query.get_or_404(id)
+
+    if request.method == 'POST':
+        shoes_item.shoes_name = request.form.get('shoes_name')
+        shoes_item.shoes_brand = request.form.get('shoes_brand')
+        shoes_item.shoes_size = int(request.form.get('shoes_size', 0))
+        shoes_item.shoes_gender = request.form.get('shoes_gender')
+        shoes_item.shoes_color = request.form.get('shoes_color')
+        shoes_item.shoes_price = float(request.form.get('shoes_price', 0))
+
+        try:
+            db.session.commit()
+            return redirect('/shoes')
+        except Exception as e:
+            return f'There was an issue updating the shoes item: {e}'
+
+    else:
+        return render_template('shoesupdate.html', item=shoes_item)
+    
+@app.route('/update/appliances/<int:id>', methods=['GET', 'POST'])
+def appliancesUpdate(id):
+    appliance_item = Appliances.query.get_or_404(id)
+
+    if request.method == 'POST':
+        appliance_item.appliance_name = request.form.get('appliance_name')
+        appliance_item.appliance_type = request.form.get('appliance_type')
+        appliance_item.appliance_brand = request.form.get('appliance_brand')
+        appliance_item.appliance_weight = float(request.form.get('appliance_weight', 0))
+        appliance_item.appliance_voltage = int(request.form.get('appliance_voltage', 0))
+        appliance_item.appliance_price = float(request.form.get('appliance_price', 0))
+
+        try:
+            db.session.commit()
+            return redirect('/appliances')
+        except Exception as e:
+            return f'There was an issue updating the appliance item: {e}'
+
+    else:
+        return render_template('appliancesupdate.html', item=appliance_item)
+    
+@app.route('/update/stationery/<int:id>', methods=['GET', 'POST'])
+def stationeryUpdate(id):
+    stationery_item = Stationery.query.get_or_404(id)
+
+    if request.method == 'POST':
+        stationery_item.stationery_name = request.form.get('stationery_name')
+        stationery_item.stationery_brand = request.form.get('stationery_brand')
+        stationery_item.stationery_type = request.form.get('stationery_type')
+        stationery_item.stationery_quantity = int(request.form.get('stationery_quantity', 0))
+        stationery_item.stationery_price = float(request.form.get('stationery_price', 0))
+
+        try:
+            db.session.commit()
+            return redirect('/stationery')
+        except Exception as e:
+            return f'There was an issue updating the stationery item: {e}'
+
+    else:
+        return render_template('stationeryupdate.html', item=stationery_item)
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all() 

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align:center">Update Appliances</h1>
+
+    <form action="/update/appliances/{{ item.appliance_id }}" method="POST">
+        <input type="text" name="appliance_name" value="{{ item.appliance_name }}" required>
+        <input type="text" name="appliance_type" value="{{ item.appliance_type }}" required>
+        <input type="text" name="appliance_brand" value="{{ item.appliance_brand }}" required>
+        <input type="number" step="any" name="appliance_weight" value="{{ item.appliance_weight }}" required>
+        <input type="number" name="appliance_voltage" value="{{ item.appliance_voltage }}" required>
+        <input type="number" step="any" name="appliance_price" value="{{ item.appliance_price }}" required>
+        <input type="submit" value="Update Appliances">
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align:center">Update Furniture</h1>
+
+    <form action="/update/furniture/{{ item.furniture_id }}" method="POST">
+        <input type="text" name="furniture_name" value="{{ item.furniture_name }}" required>
+        <input type="text" name="furniture_type" value="{{ item.furniture_type }}" required>
+        <input type="number" step="any" name="furniture_weight" value="{{ item.furniture_weight }}" required>
+        <input type="number" step="any" name="furniture_price" value="{{ item.furniture_price }}" required>
+        <input type="submit" value="Update Furniture">
+    </form>
+</div>
+{% endblock %}

@@ -1,8 +1,47 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
 {% block head %}
 {% endblock %}
 
 {% block body %}
-<h1>Shoes</h1>
+<div class="content">
+    <h1 style="text-align: center">Shoes</h1>
+    <form action="/shoes" method="post">
+        <input type="text" name="shoes_name" placeholder="Shoe Name" required>
+        <input type="text" name="shoes_brand" placeholder="Brand" required>
+        <input type="number" name="shoes_size" placeholder="Size" required>
+        <input type="text" name="shoes_gender" placeholder="Gender" required>
+        <input type="text" name="shoes_color" placeholder="Color" required>
+        <input type="number" step="any" name="shoes_price" placeholder="Price" required>
+        <input type="submit" value="Add Entry">
+    </form>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Brand</th>
+            <th>Size</th>
+            <th>Gender</th>
+            <th>Color</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+        {% for item in shoes_items %}
+            <tr>
+                <td>{{ item.shoes_id }}</td>
+                <td>{{ item.shoes_name }}</td>
+                <td>{{ item.shoes_brand }}</td>
+                <td>{{ item.shoes_size }}</td>
+                <td>{{ item.shoes_gender }}</td>
+                <td>{{ item.shoes_color }}</td>
+                <td>₱ {{ item.shoes_price }}</td>
+                <td>
+                    <a href="/delete/shoes/{{item.shoes_id}}">Delete</a>
+                    <br>
+                    <a href="/update/shoes/{{item.shoes_id}}">Update</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}

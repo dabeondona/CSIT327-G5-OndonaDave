@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align:center">Update Stationery</h1>
+
+    <form action="/update/stationery/{{ item.stationery_id }}" method="POST">
+        <input type="text" name="stationery_name" value="{{ item.stationery_name }}" required>
+        <input type="text" name="stationery_brand" value="{{ item.stationery_brand }}" required>
+        <input type="text" name="stationery_type" value="{{ item.stationery_type }}" required>
+        <input type="number" name="stationery_quantity" value="{{ item.stationery_quantity }}" required>
+        <input type="number" step="any" name="stationery_price" value="{{ item.stationery_price }}" required>
+        <input type="submit" value="Update Stationery">
+    </form>
+</div>
+{% endblock %}
