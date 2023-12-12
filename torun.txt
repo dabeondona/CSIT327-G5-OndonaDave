@@ -10,3 +10,11 @@ To push to heroku do this:
 > git add .
 > git commit -m "Commit Message Here"
 > git push heroku main
+
+To push and pull to git hub do this:
+
+(for the changes/additions/deletions you've done) > git add . 
+> git commit -m "Commit Message Here"
+> git push origin main
+    or  
+> git pull origin main
