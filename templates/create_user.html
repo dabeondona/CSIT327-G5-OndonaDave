@@ -1,0 +1,15 @@
+{% extends 'base.html'%}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align:center">Create User</h1>
+    <button onclick="window.history.back();">Back</button>
+    <form action="/users" method="post">
+        <input type="text" name="user_name" placeholder="Username" required>
+        <input type="submit" value="Register">
+    </form>
+</div>
+{% endblock %}

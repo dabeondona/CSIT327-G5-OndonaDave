@@ -6,7 +6,7 @@
 {% block body %}
 <div class="content">
     <h1 style="text-align:center">Update Stationery</h1>
-
+    <button onclick="window.history.back();">Back</button>
     <form action="/update/stationery/{{ item.stationery_id }}" method="POST">
         <input type="text" name="stationery_name" value="{{ item.stationery_name }}" required>
         <input type="text" name="stationery_brand" value="{{ item.stationery_brand }}" required>

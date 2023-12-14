@@ -5,7 +5,7 @@
 
 {% block body %}
 <div class="content">
-    <h1 style="text-align:center">Inventory Management</h1>
+    <h1 style="text-align:center">Inventory Management Dashboard</h1>
     <table>
         <tr>
             <th>Rank</th>
@@ -21,6 +21,23 @@
                 <td>
                     <a href="/{{ category.category|lower }}">View</a>
                 </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h1 style="text-align:center">User List</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Items Bought</th>
+            <th>Actions</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.user_id }}</td>
+                <td>{{ user.user_name }}</td>
+                <td>{{ user.user_items_bought }}</td>
             </tr>
         {% endfor %}
     </table>

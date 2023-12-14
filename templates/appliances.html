@@ -6,6 +6,7 @@
 {% block body %}
 <div class="content">
     <h1 style="text-align: center">Appliances</h1>
+    <button onclick="window.history.back();">Back</button>
     <form action="/appliances" method="post">
         <input type="text" name="appliance_name" placeholder="Appliance Name" required>
         <input type="text" name="appliance_type" placeholder="Type" required>

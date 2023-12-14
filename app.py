@@ -50,6 +50,11 @@ class Stationery(db.Model):
 
     def __repr__(self):
         return '<Stationery %r>' % self.id
+    
+class User(db.Model):
+    user_id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String(100), nullable = False)
+    user_items_bought = db.Column(db.Integer)
 
 def create_view(): # VIEW
     with app.app_context():
@@ -73,8 +78,25 @@ def index():
     result = db.session.execute(text('SELECT * FROM category_summary'))
     categories = [{'category': row[0], 'count': row[1]} for row in result]
     categories.sort(key=lambda x: x['count'], reverse=True)
-    return render_template('index.html', categories=categories)
+    users = User.query.all()
+    return render_template('index.html', categories=categories, users=users)
 
+
+@app.route('/users', methods=['POST', 'GET'])
+def users():
+    if request.method == 'POST':
+        user_name = request.form.get('user_name')
+        
+        if user_name:
+            try:
+                new_user = User(user_name=user_name)
+                
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect('/users')
+            except Exception as e:
+                return f'An error occured when adding the user: {e}'
+    return render_template('create_user.html')
     
 @app.route('/furniture', methods=['POST', 'GET'])
 def furniture():
