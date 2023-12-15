@@ -1,0 +1,141 @@
+{% extends 'base.html'%}
+
+{% block head %}
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+</style>
+{% endblock %}
+
+{% block body %}
+<a class="btn btn-primary btn-sm" href="/logout">Logout</a>
+<div class="container text-center">
+    <h1>Welcome, {{ username }}! This is the Store</h1>
+    <p>{{ username }}! Your user ID is {{ user_id }}.</p>
+
+    <div class="grid-container">
+        <div class="grid-item">
+            <h2>Furniture</h2>
+            <table class="table">
+                <tr>
+                    <th class="table-dark">ID</th>
+                    <th class="table-dark">Name</th>
+                    <th class="table-dark">Type</th>
+                    <th class="table-dark">Weight</th>
+                    <th class="table-dark">Price</th>
+                    <th class="table-dark">Actions</th>
+                </tr>
+                {% for item in furniture_items %}
+                    <tr>
+                        <td>{{ item.furniture_id }}</td>
+                        <td>{{ item.furniture_name }}</td>
+                        <td>{{ item.furniture_type }}</td>
+                        <td>{{ item.furniture_weight }} kg</td>
+                        <td>₱ {{ item.furniture_price }}</td>
+                        <td>
+                            <div class="container">
+                                <a href="/buy/furniture/{{ item.furniture_id }}" class="btn btn-success btn-sm">Buy</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="grid-item">
+            <h2>Shoes</h2>
+            <table class="table">
+                <tr>
+                    <th class="table-dark">ID</th>
+                    <th class="table-dark">Name</th>
+                    <th class="table-dark">Brand</th>
+                    <th class="table-dark">Size</th>
+                    <th class="table-dark">Gender</th>
+                    <th class="table-dark">Color</th>
+                    <th class="table-dark">Price</th>
+                    <th class="table-dark">Actions</th>
+                </tr>
+                {% for item in shoes_items %}
+                    <tr>
+                        <td>{{ item.shoes_id }}</td>
+                        <td>{{ item.shoes_name }}</td>
+                        <td>{{ item.shoes_brand }}</td>
+                        <td>{{ item.shoes_size }}</td>
+                        <td>{{ item.shoes_gender }}</td>
+                        <td>{{ item.shoes_color }}</td>
+                        <td>₱ {{ item.shoes_price }}</td>
+                        <td>
+                            <div class="container">
+                                <a href="/buy/shoes/{{ item.shoes_id }}" class="btn btn-success btn-sm">Buy</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="grid-item">
+            <h2>Appliances</h2>
+            <table class="table">
+                <tr>
+                    <th class="table-dark">ID</th>
+                    <th class="table-dark">Name</th>
+                    <th class="table-dark">Type</th>
+                    <th class="table-dark">Brand</th>
+                    <th class="table-dark">Weight</th>
+                    <th class="table-dark">Voltage</th>
+                    <th class="table-dark">Price</th>
+                    <th class="table-dark">Actions</th>
+                </tr>
+                {% for item in appliances_items %}
+                    <tr>
+                        <td>{{ item.appliance_id }}</td>
+                        <td>{{ item.appliance_name }}</td>
+                        <td>{{ item.appliance_type }}</td>
+                        <td>{{ item.appliance_brand }}</td>
+                        <td>{{ item.appliance_weight }} kg</td>
+                        <td>{{ item.appliance_voltage }} V</td>
+                        <td>₱ {{ item.appliance_price }}</td>
+                        <td>
+                            <div class="container">
+                                <a href="/buy/appliances/{{ item.appliance_id }}" class="btn btn-success btn-sm">Buy</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="grid-item">
+            <h2>Stationery</h2>
+            <table class="table">
+                <tr>
+                    <th class="table-dark">ID</th>
+                    <th class="table-dark">Name</th>
+                    <th class="table-dark">Brand</th>
+                    <th class="table-dark">Type</th>
+                    <th class="table-dark">Quantity</th>
+                    <th class="table-dark">Price</th>
+                    <th class="table-dark">Actions</th>
+                </tr>
+                {% for item in stationery_items %}
+                    <tr>
+                        <td>{{ item.stationery_id }}</td>
+                        <td>{{ item.stationery_name }}</td>
+                        <td>{{ item.stationery_brand }}</td>
+                        <td>{{ item.stationery_type }}</td>
+                        <td>{{ item.stationery_quantity }}</td>
+                        <td>₱ {{ item.stationery_price }}</td>
+                        <td>
+                            <div class="container">
+                                <a href="/buy/stationery/{{ item.stationery_id }}" class="btn btn-success btn-sm">Buy</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

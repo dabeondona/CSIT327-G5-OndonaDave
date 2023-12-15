@@ -1,64 +1,39 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
 {% block head %}
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
 {% endblock %}
+
 {% block body %}
+<button type='button' class="btn btn-danger" onclick="window.history.back();">Back</button>
 <div class="container text-center">
     <h1>User Purchases</h1>
-    <div class="container text-center">
-            <tr>
-                <th class="table-dark">Category</th>
-                <th class="table-dark">Item Name</th>
-                <th class="table-dark">Details</th>
-                <th class="table-dark">Price</th>
-            </tr>
-            {% for purchase, user, furniture, shoes, appliances, stationery in purchases %}
-            <tr>
-                <td>{{ purchase.category }}</td>
-                <td>
-                    {% if purchase.category == 'Furniture' %}
-                        {{ furniture.furniture_name }}
-                    {% elif purchase.category == 'Shoes' %}
-                        {{ shoes.shoes_name }}
-                    {% elif purchase.category == 'Appliances' %}
-                        {{ appliances.appliance_name }}
-                    {% elif purchase.category == 'Stationery' %}
-                        {{ stationery.stationery_name }}
-                    {% else %}
-                        Unknown
-                    {% endif %}
-                </td>
-                <td>
-                </td>
-                <td>
-                    {% if purchase.category == 'Furniture' %}
-                        ${{ furniture.furniture_price }}
-                    {% elif purchase.category == 'Shoes' %}
-                        ${{ shoes.shoes_price }}
-                    {% elif purchase.category == 'Appliances' %}
-                        ${{ appliances.appliance_price }}
-                    {% elif purchase.category == 'Stationery' %}
-                        ${{ stationery.stationery_price }}
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
+    <table>
+        <tr>
+            <th class="table-dark">Category</th>
+            <th class="table-dark">Item Name</th>
+            <th class="table-dark">Price</th>
+        </tr>
+        {% for purchase in purchases %}
+        <tr>
+            <td>{{ purchase.category }}</td>
+            <td>{{ purchase.item_name }}</td>
+            <td>${{ purchase.item_price }}</td>
+        </tr>
+        {% endfor %}
     </table>
 </div>
 {% endblock %}

@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.secret_key = 'dabeondona'
 db = SQLAlchemy(app)
 
 class Furniture(db.Model):
@@ -64,6 +65,41 @@ class Purchase(db.Model):
 
     def __repr__(self):
         return f'<Purchase {self.id}>'
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+
+        user = User.query.filter_by(user_name=username).first()
+        if user:
+            session['logged_in'] = True
+            session['username'] = username
+            session['user_id'] = user.user_id 
+            return redirect(url_for('store'))
+        else:
+            return 'User does not exist. Please check your username.'
+
+    return render_template('login.html')
+
+@app.route('/store')
+def store():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    username = session.get('username', 'Guest') 
+    user_id = session.get('user_id')
+    
+    furniture_items = Furniture.query.all()
+    shoes_items = Shoes.query.all()
+    appliances_items = Appliances.query.all()
+    stationery_items = Stationery.query.all()
+  
+    return render_template('store.html', username=username, user_id=user_id, furniture_items=furniture_items, shoes_items=shoes_items, appliances_items=appliances_items, stationery_items=stationery_items)
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('login'))
+
     
 @app.route('/admin-dashboard')
 def index():
@@ -75,34 +111,32 @@ def index():
 
 @app.route('/user-purchases/<int:user_id>')
 def user_purchases(user_id):
-    purchases = db.session.query(Purchase, User, Furniture, Shoes, Appliances, Stationery)\
-        .outerjoin(User, User.user_id == Purchase.user_id)\
-        .outerjoin(Furniture, db.and_(Purchase.category == 'Furniture', Purchase.item_id == Furniture.furniture_id))\
-        .outerjoin(Shoes, db.and_(Purchase.category == 'Shoes', Purchase.item_id == Shoes.shoes_id))\
-        .outerjoin(Appliances, db.and_(Purchase.category == 'Appliances', Purchase.item_id == Appliances.appliance_id))\
-        .outerjoin(Stationery, db.and_(Purchase.category == 'Stationery', Purchase.item_id == Stationery.stationery_id))\
-        .filter(Purchase.user_id == user_id).all()
-    
-    return render_template('user_purchases.html', purchases=purchases)
+ 
+    purchases = Purchase.query.filter_by(user_id=user_id).all()
 
 
+    purchased_items = []
+    for purchase in purchases:
+        item = None
+        if purchase.category == 'Furniture':
+            item = Furniture.query.get(purchase.item_id)
+        elif purchase.category == 'Shoes':
+            item = Shoes.query.get(purchase.item_id)
+        elif purchase.category == 'Appliances':
+            item = Appliances.query.get(purchase.item_id)
+        elif purchase.category == 'Stationery':
+            item = Stationery.query.get(purchase.item_id)
 
-@app.route('/users', methods=['POST', 'GET'])
-def users():
-    if request.method == 'POST':
-        user_name = request.form.get('user_name')
-        
-        if user_name:
-            try:
-                new_user = User(user_name=user_name)
-                
-                db.session.add(new_user)
-                db.session.commit()
-                return redirect('/users')
-            except Exception as e:
-                return f'An error occured when adding the user: {e}'
-    return render_template('create_user.html')
-    
+        if item:
+            purchased_items.append({
+                'category': purchase.category,
+                'item_id': purchase.item_id,
+                'item_name': getattr(item, item.__tablename__ + '_name'),  
+                'item_price': getattr(item, item.__tablename__ + '_price')  
+            })
+
+    return render_template('user_purchases.html', purchases=purchased_items)
+
 @app.route('/furniture', methods=['POST', 'GET'])
 def furniture():
     if request.method == 'POST':
@@ -323,6 +357,41 @@ def stationeryUpdate(id):
 
     else:
         return render_template('stationeryupdate.html', item=stationery_item)
+    
+@app.route('/buy/<category>/<int:item_id>')
+def buy(category, item_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    
+    user_id = session.get('user_id')
+    if user_id is None:
+        return 'You must be logged in to make a purchase.', 403
+
+    model = get_model_by_category(category)
+    if model is None:
+        return 'Invalid category', 404
+    
+    item = model.query.get(item_id)
+    if item is None:
+        return 'Item not found', 404
+
+    purchase = Purchase(user_id=user_id, category=category, item_id=item_id)
+    db.session.add(purchase)
+    
+    user = User.query.get(user_id)
+    if user is None:
+        return 'User not found', 404
+    user.user_items_bought = user.user_items_bought + 1 if user.user_items_bought else 1
+
+    db.session.delete(item)
+
+    try:
+        db.session.commit()
+        return redirect(url_for('store'))
+    except Exception as e:
+        db.session.rollback()
+        return f'An error occurred when processing the purchase: {e}', 500
+
 
 if __name__ == "__main__":
     with app.app_context():

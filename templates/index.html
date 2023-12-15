@@ -45,7 +45,7 @@
                         <td>{{ user.user_name }}</td>
                         <td>{{ user.user_items_bought }}</td>
                         <td>
-                            <a href="/user-purchases/">View</a>
+                            <a href="/user-purchases/{{ user.user_id }}"">View</a>
                         </td>
                     </tr>
                 {% endfor %}
