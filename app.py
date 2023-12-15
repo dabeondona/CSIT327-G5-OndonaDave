@@ -65,7 +65,7 @@ class Purchase(db.Model):
     def __repr__(self):
         return f'<Purchase {self.id}>'
     
-@app.route('/')
+@app.route('/admin-dashboard')
 def index():
     result = db.session.execute(text('SELECT * FROM category_summary'))
     categories = [{'category': row[0], 'count': row[1]} for row in result]
@@ -74,9 +74,7 @@ def index():
     return render_template('index.html', categories=categories, users=users)
 
 @app.route('/user-purchases/<int:user_id>')
-def user_purchases():
-    user_id = 1 
-    user = User.query.get(user_id)
+def user_purchases(user_id):
     purchases = db.session.query(Purchase, User, Furniture, Shoes, Appliances, Stationery)\
         .outerjoin(User, User.user_id == Purchase.user_id)\
         .outerjoin(Furniture, db.and_(Purchase.category == 'Furniture', Purchase.item_id == Furniture.furniture_id))\
@@ -85,7 +83,7 @@ def user_purchases():
         .outerjoin(Stationery, db.and_(Purchase.category == 'Stationery', Purchase.item_id == Stationery.stationery_id))\
         .filter(Purchase.user_id == user_id).all()
     
-    return render_template('user_purchases.html', user=user, purchases=purchases)
+    return render_template('user_purchases.html', purchases=purchases)
 
 
 

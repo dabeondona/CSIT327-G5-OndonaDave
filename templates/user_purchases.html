@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User Purchases</title>
+{% extends 'base.html'%}
+
+{% block head %}
     <style>
         table {
             width: 100%;
@@ -17,19 +15,17 @@
             background-color: #f2f2f2;
         }
     </style>
-</head>
-<body>
+{% endblock %}
+{% block body %}
+<div class="container text-center">
     <h1>User Purchases</h1>
-    <table>
-        <thead>
+    <div class="container text-center">
             <tr>
-                <th>Category</th>
-                <th>Item Name</th>
-                <th>Details</th>
-                <th>Price</th>
+                <th class="table-dark">Category</th>
+                <th class="table-dark">Item Name</th>
+                <th class="table-dark">Details</th>
+                <th class="table-dark">Price</th>
             </tr>
-        </thead>
-        <tbody>
             {% for purchase, user, furniture, shoes, appliances, stationery in purchases %}
             <tr>
                 <td>{{ purchase.category }}</td>
@@ -63,7 +59,6 @@
                 </td>
             </tr>
             {% endfor %}
-        </tbody>
     </table>
-</body>
-</html>
+</div>
+{% endblock %}
