@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:NewPassword@localhost:3306/dbinformationmanagement'
 app.secret_key = 'dabeondona'
 db = SQLAlchemy(app)
 
@@ -273,7 +273,7 @@ def delete(category, id):
     try:
         db.session.delete(item_to_delete)
         db.session.commit()
-        return redirect('/')
+        return redirect('/admin-dashboard')
     except:
         return 'There was a problem deleting that item'
     

@@ -8,9 +8,9 @@
     <h1 style="text-align: center">Shoes Inventory</h1>
     <div class="container">
         <br/>
-        <div class="container" style="padding-left: 200px">
+        <div class="flex">
             <form action="/shoes" method="post">
-                <button type='button' class="btn btn-danger" onclick="window.history.back();">Back</button>
+                <a type='button' class="btn btn-danger" href="/admin-dashboard">Back</a>
                 <input type="text" name="shoes_name" placeholder="Shoe Name" required>
                 <input type="text" name="shoes_brand" placeholder="Brand" required>
                 <input type="number" name="shoes_size" placeholder="Size" required>

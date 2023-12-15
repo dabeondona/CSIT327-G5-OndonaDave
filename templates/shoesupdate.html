@@ -24,13 +24,15 @@
 {% block body %}
 <div class="content">
     <h1 style="text-align:center">Update Shoes</h1>
-    <div class="container">
+    <div class="flex">
         <form action="/update/furniture/{{ item.furniture_id }}" method="post">
             <button type='button' class="btn btn-danger" onclick="window.history.back();">Back</button>
-            <input type="text" name="furniture_name" value="{{ item.furniture_name }}" required>
-            <input type="text" name="furniture_type" value="{{ item.furniture_type }}" required>
-            <input type="number" step="any" name="furniture_weight" value="{{ item.furniture_weight }}" required>
-            <input type="number" step="any" name="furniture_price" value="{{ item.furniture_price }}" required>
+            <input type="text" name="shoes_name" value="{{ item.shoes_name }}" required>
+            <input type="text" name="shoes_brand" value="{{ item.shoes_brand }}" required>
+            <input type="number" step="any" name="shoes_size" value="{{ item.shoes_size }}" required>
+            <input type="text" step="any" name="shoes_gender" value="{{ item.shoes_gender }}" required>
+            <input type="text" step="any" name="shoes_color" value="{{ item.shoes_color }}" required>
+            <input type="number" step="any" name="shoes_price" value="{{ item.shoes_price }}" required>
             <input type="submit" class="btn btn-outline-success btn-sm" value="Update">
         </form>
     </div>
