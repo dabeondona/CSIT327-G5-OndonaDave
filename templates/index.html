@@ -1,45 +1,57 @@
 {% extends 'base.html'%}
 
 {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"
 {% endblock %}
 
 {% block body %}
-<div class="content">
-    <h1 style="text-align:center">Inventory Management Dashboard</h1>
-    <table>
-        <tr>
-            <th>Rank</th>
-            <th>Category</th>
-            <th>Entries</th>
-            <th>Actions</th>
-        </tr>
-        {% for category in categories %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ category.category }}</td>
-                <td>{{ category.count }}</td>
-                <td>
-                    <a href="/{{ category.category|lower }}">View</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+<h5>Welcome, Admin!</h5>
+<div class="container text-center">
+    <div class="row">
+            <div class="col">
+            <h1>Inventory</h1>
+            <table>
+                <tr>
+                    <th>Rank</th>
+                    <th>Category</th>
+                    <th>Entries</th>
+                    <th>Actions</th>
+                </tr>
+                {% for category in categories %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ category.category }}</td>
+                        <td>{{ category.count }}</td>
+                        <td>
+                            <a href="/{{ category.category|lower }}">View</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            </div>
 
-    <h1 style="text-align:center">User List</h1>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Items Bought</th>
-            <th>Actions</th>
-        </tr>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.user_id }}</td>
-                <td>{{ user.user_name }}</td>
-                <td>{{ user.user_items_bought }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+            <div class="col">
+            <h1>User List</h1>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Items Bought</th>
+                    <th>Actions</th>
+                </tr>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.user_id }}</td>
+                        <td>{{ user.user_name }}</td>
+                        <td>{{ user.user_items_bought }}</td>
+                        <td>
+                            <a href="/user-purchases/">View</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            </div>
+    </div>
+    
 </div>
 {% endblock %}

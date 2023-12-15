@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Purchases</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Purchases</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Item Name</th>
+                <th>Details</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchase, user, furniture, shoes, appliances, stationery in purchases %}
+            <tr>
+                <td>{{ purchase.category }}</td>
+                <td>
+                    {% if purchase.category == 'Furniture' %}
+                        {{ furniture.furniture_name }}
+                    {% elif purchase.category == 'Shoes' %}
+                        {{ shoes.shoes_name }}
+                    {% elif purchase.category == 'Appliances' %}
+                        {{ appliances.appliance_name }}
+                    {% elif purchase.category == 'Stationery' %}
+                        {{ stationery.stationery_name }}
+                    {% else %}
+                        Unknown
+                    {% endif %}
+                </td>
+                <td>
+                </td>
+                <td>
+                    {% if purchase.category == 'Furniture' %}
+                        ${{ furniture.furniture_price }}
+                    {% elif purchase.category == 'Shoes' %}
+                        ${{ shoes.shoes_price }}
+                    {% elif purchase.category == 'Appliances' %}
+                        ${{ appliances.appliance_price }}
+                    {% elif purchase.category == 'Stationery' %}
+                        ${{ stationery.stationery_price }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -56,22 +56,14 @@ class User(db.Model):
     user_name = db.Column(db.String(100), nullable = False)
     user_items_bought = db.Column(db.Integer)
 
-def create_view(): # VIEW
-    with app.app_context():
-        view_query = text("""
-        CREATE VIEW IF NOT EXISTS category_summary AS 
-        SELECT 'Furniture' AS category, COUNT(*) AS count FROM furniture
-        UNION ALL
-        SELECT 'Shoes', COUNT(*) FROM shoes
-        UNION ALL
-        SELECT 'Appliances', COUNT(*) FROM appliances
-        UNION ALL
-        SELECT 'Stationery', COUNT(*) FROM stationery;
-        """)
-        db.session.execute(view_query)
-        db.session.commit()
+class Purchase(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    category = db.Column(db.String(100)) 
+    item_id = db.Column(db.Integer) 
 
-
+    def __repr__(self):
+        return f'<Purchase {self.id}>'
     
 @app.route('/')
 def index():
@@ -80,6 +72,21 @@ def index():
     categories.sort(key=lambda x: x['count'], reverse=True)
     users = User.query.all()
     return render_template('index.html', categories=categories, users=users)
+
+@app.route('/user-purchases/<int:user_id>')
+def user_purchases():
+    user_id = 1 
+    user = User.query.get(user_id)
+    purchases = db.session.query(Purchase, User, Furniture, Shoes, Appliances, Stationery)\
+        .outerjoin(User, User.user_id == Purchase.user_id)\
+        .outerjoin(Furniture, db.and_(Purchase.category == 'Furniture', Purchase.item_id == Furniture.furniture_id))\
+        .outerjoin(Shoes, db.and_(Purchase.category == 'Shoes', Purchase.item_id == Shoes.shoes_id))\
+        .outerjoin(Appliances, db.and_(Purchase.category == 'Appliances', Purchase.item_id == Appliances.appliance_id))\
+        .outerjoin(Stationery, db.and_(Purchase.category == 'Stationery', Purchase.item_id == Stationery.stationery_id))\
+        .filter(Purchase.user_id == user_id).all()
+    
+    return render_template('user_purchases.html', user=user, purchases=purchases)
+
 
 
 @app.route('/users', methods=['POST', 'GET'])
@@ -322,5 +329,4 @@ def stationeryUpdate(id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all() 
-        create_view()    
     app.run(debug=True)

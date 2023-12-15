@@ -1,19 +1,39 @@
 {% extends 'base.html' %}
 
 {% block head %}
+<style>
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; 
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+</style>
 {% endblock %}
 
 {% block body %}
 <div class="content">
     <h1 style="text-align:center">Update Stationery</h1>
-    <button onclick="window.history.back();">Back</button>
-    <form action="/update/stationery/{{ item.stationery_id }}" method="POST">
-        <input type="text" name="stationery_name" value="{{ item.stationery_name }}" required>
-        <input type="text" name="stationery_brand" value="{{ item.stationery_brand }}" required>
-        <input type="text" name="stationery_type" value="{{ item.stationery_type }}" required>
-        <input type="number" name="stationery_quantity" value="{{ item.stationery_quantity }}" required>
-        <input type="number" step="any" name="stationery_price" value="{{ item.stationery_price }}" required>
-        <input type="submit" value="Update Stationery">
-    </form>
+    <div class="container">
+        <form action="/update/stationery/{{ item.stationery_id }}" method="post">
+            <button type='button' class="btn btn-danger" onclick="window.history.back();">Back</button>
+            <input type="text" name="stationery_name" value="{{ item.stationery_name }}" required>
+            <input type="text" name="stationery_brand" value="{{ item.stationery_brand }}" required>
+            <input type="text" name="stationery_type" value="{{ item.stationery_type }}" required>
+            <input type="number" name="stationery_quantity" value="{{ item.stationery_quantity }}" required>
+            <input type="number" step="any" name="stationery_price" value="{{ item.stationery_price }}" required>
+            <input type="submit" class="btn btn-outline-success btn-sm" value="Update">
+        </form>
+    </div>
 </div>
 {% endblock %}

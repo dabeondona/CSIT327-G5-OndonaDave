@@ -1,20 +1,40 @@
 {% extends 'base.html' %}
 
 {% block head %}
+<style>
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; 
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+</style>
 {% endblock %}
 
 {% block body %}
 <div class="content">
     <h1 style="text-align:center">Update Appliances</h1>
-    <button onclick="window.history.back();">Back</button>
-    <form action="/update/appliances/{{ item.appliance_id }}" method="POST">
-        <input type="text" name="appliance_name" value="{{ item.appliance_name }}" required>
-        <input type="text" name="appliance_type" value="{{ item.appliance_type }}" required>
-        <input type="text" name="appliance_brand" value="{{ item.appliance_brand }}" required>
-        <input type="number" step="any" name="appliance_weight" value="{{ item.appliance_weight }}" required>
-        <input type="number" name="appliance_voltage" value="{{ item.appliance_voltage }}" required>
-        <input type="number" step="any" name="appliance_price" value="{{ item.appliance_price }}" required>
-        <input type="submit" value="Update Appliances">
-    </form>
+    <div class="container">
+        <form action="/update/appliances/{{ item.appliance_id }}" method="post">
+            <button type='button' class="btn btn-danger" onclick="window.history.back();">Back</button>
+            <input type="text" name="appliance_name" value="{{ item.appliance_name }}" required>
+            <input type="text" name="appliance_type" value="{{ item.appliance_type }}" required>
+            <input type="text" name="appliance_brand" value="{{ item.appliance_brand }}" required>
+            <input type="number" step="any" name="appliance_weight" value="{{ item.appliance_weight }}" required>
+            <input type="number" name="appliance_voltage" value="{{ item.appliance_voltage }}" required>
+            <input type="number" step="any" name="appliance_price" value="{{ item.appliance_price }}" required>
+            <input type="submit" class="btn btn-outline-success btn-sm" value="Update">
+        </form>
+    </div>
 </div>
 {% endblock %}

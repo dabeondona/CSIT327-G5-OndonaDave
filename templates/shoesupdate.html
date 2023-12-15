@@ -1,18 +1,38 @@
 {% extends 'base.html' %}
 
 {% block head %}
+<style>
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; 
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+</style>
 {% endblock %}
 
 {% block body %}
 <div class="content">
     <h1 style="text-align:center">Update Shoes</h1>
-    <button onclick="window.history.back();">Back</button>
-    <form action="/update/furniture/{{ item.furniture_id }}" method="POST">
-        <input type="text" name="furniture_name" value="{{ item.furniture_name }}" required>
-        <input type="text" name="furniture_type" value="{{ item.furniture_type }}" required>
-        <input type="number" step="any" name="furniture_weight" value="{{ item.furniture_weight }}" required>
-        <input type="number" step="any" name="furniture_price" value="{{ item.furniture_price }}" required>
-        <input type="submit" value="Update Furniture">
-    </form>
+    <div class="container">
+        <form action="/update/furniture/{{ item.furniture_id }}" method="post">
+            <button type='button' class="btn btn-danger" onclick="window.history.back();">Back</button>
+            <input type="text" name="furniture_name" value="{{ item.furniture_name }}" required>
+            <input type="text" name="furniture_type" value="{{ item.furniture_type }}" required>
+            <input type="number" step="any" name="furniture_weight" value="{{ item.furniture_weight }}" required>
+            <input type="number" step="any" name="furniture_price" value="{{ item.furniture_price }}" required>
+            <input type="submit" class="btn btn-outline-success btn-sm" value="Update">
+        </form>
+    </div>
 </div>
 {% endblock %}
