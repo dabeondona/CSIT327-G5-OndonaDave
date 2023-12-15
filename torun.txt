@@ -12,12 +12,6 @@ or
 
 (venv) PS C:\Users\user\Documents\CCS-3\im2-app> python3 app.py
 
-To push to heroku do this:
-
-> git add .
-> git commit -m "Commit Message Here"
-> git push heroku main
-
 To push and pull to git hub do this:
 
 (for the changes/additions/deletions you've done) > git add . 
@@ -25,7 +19,3 @@ To push and pull to git hub do this:
 > git push origin main
     or  
 > git pull origin main
-
-
-My own remote link:
-https://informationmanagement2project-49c923310fab.herokuapp.com/
