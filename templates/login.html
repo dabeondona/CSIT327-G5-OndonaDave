@@ -1,11 +1,38 @@
 {% extends 'base.html'%}
 
 {% block head %}
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+    }
+    .full-height {
+        min-height: 100vh; 
+    }
+    .background-image {
+        background: url('/static/images/login.png') no-repeat center center fixed; 
+        background-size: cover;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
-<form method="POST" action="/">
-    <input type="text" name="username" placeholder="Enter your username" required>
-    <input type="submit" value="Login">
-</form>
+<div class="full-height background-image">
+    <div class="container">
+        <div class="row justify-content-center align-items-center full-height">
+            <div class="col-md-4 offset-md-11 text-center">
+                <h1>Welcome to your one-stop E-Commerce Website!</h1>
+                <form method="POST" action="/" class="mt-4">
+                    <div class="mb-3 text-start">
+                        <label for="exampleInputEmail1" class="form-label">Enter Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Login">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
