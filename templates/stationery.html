@@ -29,6 +29,7 @@
             <th class="table-dark">Type</th>
             <th class="table-dark">Quantity</th>
             <th class="table-dark">Price</th>
+            <th class="table-dark">Availability</th>
             <th class="table-dark">Actions</th>
         </tr>
         {% for item in stationery_items %}
@@ -39,6 +40,7 @@
                 <td>{{ item.stationery_type }}</td>
                 <td>{{ item.stationery_quantity }}</td>
                 <td>₱ {{ item.stationery_price }}</td>
+                <td>{{ item.is_available }}</td>
                 <td>
                     <div class="container">
                         <a class="btn btn-primary btn-sm" href="/delete/stationery/{{item.stationery_id}}">Delete</a>

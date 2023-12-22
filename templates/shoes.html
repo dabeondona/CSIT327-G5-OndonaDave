@@ -33,6 +33,7 @@
             <th class="table-dark">Gender</th>
             <th class="table-dark">Color</th>
             <th class="table-dark">Price</th>
+            <th class="table-dark">Availability</th>
             <th class="table-dark">Actions</th>
         </tr>
         {% for item in shoes_items %}
@@ -45,6 +46,7 @@
                 <td>{{ item.shoes_gender }}</td>
                 <td>{{ item.shoes_color }}</td>
                 <td>₱ {{ item.shoes_price }}</td>
+                <td>{{ item.is_available }}</td>
                 <td>
                     <div class="container">
                         <a class="btn btn-primary btn-sm" href="/delete/shoes/{{item.shoes_id}}">Delete</a>

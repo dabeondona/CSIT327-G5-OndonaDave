@@ -33,6 +33,7 @@
             <th class="table-dark">Weight</th>
             <th class="table-dark">Voltage</th>
             <th class="table-dark">Price</th>
+            <th class="table-dark">Availability</th>
             <th class="table-dark">Actions</th>
         </tr>
         {% for item in appliances_items %}
@@ -45,6 +46,7 @@
                 <td>{{ item.appliance_weight }} kg</td>
                 <td>{{ item.appliance_voltage }} V</td>
                 <td>₱ {{ item.appliance_price }}</td>
+                <td>{{ item.is_available }}</td>
                 <td>
                     <div class="container">
                         <a class="btn btn-primary btn-sm"  href="/delete/appliances/{{item.appliance_id}}">Delete</a>

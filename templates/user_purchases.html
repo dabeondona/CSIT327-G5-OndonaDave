@@ -31,7 +31,13 @@
         <tr>
             <td>{{ purchase.category }}</td>
             <td>{{ purchase.item_name }}</td>
-            <td>${{ "%.2f"|format(purchase.item_price) }}</td>
+            <td>
+                {% if purchase.item_price != 'N/A' %}
+                {{ purchase.item_price }}
+                {% else %}
+                {{ purchase.item_price }}
+                {% endif %}
+            </td>
         </tr>
         {% else %}
         <tr>

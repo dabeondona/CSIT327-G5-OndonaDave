@@ -29,6 +29,7 @@
             <th class="table-dark">Quantity</th>
             <th class="table-dark">Weight</th>
             <th class="table-dark">Price</th>
+            <th class="table-dark">Availability</th>
             <th class="table-dark">Actions</th>
         </tr>
         {% for item in furniture_items %}
@@ -39,6 +40,7 @@
                 <td>{{ item.furniture_quantity }}</td>
                 <td>{{ item.furniture_weight }} kg</td>
                 <td>₱ {{ item.furniture_price }}</td>
+                <td>{{ item.is_available }}</td>
                 <td>
                     <div class="container">
                         <a class="btn btn-primary btn-sm" href="/delete/furniture/{{item.furniture_id}}">Delete</a>
