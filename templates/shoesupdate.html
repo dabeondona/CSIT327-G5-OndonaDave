@@ -28,6 +28,7 @@
         <form action="/update/furniture/{{ item.furniture_id }}" method="post">
             <button type='button' class="btn btn-danger" onclick="window.history.back();">Back</button>
             <input type="text" name="shoes_name" value="{{ item.shoes_name }}" required>
+            <input type="number" name="shoes_quantity" value="{{ item.shoes_quantity}}" required>
             <input type="text" name="shoes_brand" value="{{ item.shoes_brand }}" required>
             <input type="number" step="any" name="shoes_size" value="{{ item.shoes_size }}" required>
             <input type="text" step="any" name="shoes_gender" value="{{ item.shoes_gender }}" required>

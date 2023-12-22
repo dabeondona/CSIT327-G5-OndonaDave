@@ -1,56 +1,68 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from sqlalchemy import and_
 from sqlalchemy.sql import text
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:NewPassword@localhost:3306/dbinformationmanagement'
 app.secret_key = 'dabeondona'
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 class Furniture(db.Model):
     furniture_id = db.Column(db.Integer, primary_key=True)
     furniture_name = db.Column(db.String(200), nullable=False)
+    furniture_quantity = db.Column(db.Integer, default=0)
     furniture_type = db.Column(db.String(100))
     furniture_weight = db.Column(db.Float)
     furniture_price = db.Column(db.Float)
 
-    def __repr__(self):
-        return '<Furniture %r' % self.id
+    @property
+    def id(self):
+        return self.furniture_id
+    
+    
     
 class Shoes(db.Model):
     shoes_id = db.Column(db.Integer, primary_key=True)
     shoes_name = db.Column(db.String(200), nullable=False)
+    shoes_quantity = db.Column(db.Integer, default=0)
     shoes_brand = db.Column(db.String(100))
     shoes_size = db.Column(db.Integer)
     shoes_gender = db.Column(db.String(50))
     shoes_color = db.Column(db.String(50))
     shoes_price = db.Column(db.Float)
 
-    def __repr__(self):
-        return '<Shoes %r>' % self.id
+    @property
+    def id(self):
+        return self.shoes_id
     
 class Appliances(db.Model):
     appliance_id = db.Column(db.Integer, primary_key=True)
     appliance_name = db.Column(db.String(200), nullable=False)
+    appliance_quantity = db.Column(db.Integer, default=0)
     appliance_type = db.Column(db.String(100))
     appliance_brand = db.Column(db.String(100))
     appliance_weight = db.Column(db.Float)
     appliance_voltage = db.Column(db.Integer)
     appliance_price = db.Column(db.Float)
     
-    def __repr__(self):
-        return '<Appliances %r>' % self.id
+    @property
+    def id(self):
+        return self.appliance_id
 
 class Stationery(db.Model):
     stationery_id = db.Column(db.Integer, primary_key=True)
     stationery_name = db.Column(db.String(200), nullable=False)
     stationery_brand = db.Column(db.String(100))
     stationery_type = db.Column(db.String(100))
-    stationery_quantity = db.Column(db.Integer)
+    stationery_quantity = db.Column(db.Integer, default=0)
     stationery_price = db.Column(db.Float)
 
-    def __repr__(self):
-        return '<Stationery %r>' % self.id
+    @property
+    def id(self):
+        return self.stationery_id
     
 class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
@@ -111,45 +123,60 @@ def index():
 
 @app.route('/user-purchases/<int:user_id>')
 def user_purchases(user_id):
- 
-    purchases = Purchase.query.filter_by(user_id=user_id).all()
 
+    purchases = db.session.query(Purchase, Furniture, Shoes, Appliances, Stationery)\
+        .outerjoin(Furniture, and_(Purchase.category == 'Furniture', Purchase.item_id == Furniture.furniture_id))\
+        .outerjoin(Shoes, and_(Purchase.category == 'Shoes', Purchase.item_id == Shoes.shoes_id))\
+        .outerjoin(Appliances, and_(Purchase.category == 'Appliances', Purchase.item_id == Appliances.appliance_id))\
+        .outerjoin(Stationery, and_(Purchase.category == 'Stationery', Purchase.item_id == Stationery.stationery_id))\
+        .filter(Purchase.user_id == user_id)\
+        .all()
 
     purchased_items = []
-    for purchase in purchases:
-        item = None
-        if purchase.category == 'Furniture':
-            item = Furniture.query.get(purchase.item_id)
-        elif purchase.category == 'Shoes':
-            item = Shoes.query.get(purchase.item_id)
-        elif purchase.category == 'Appliances':
-            item = Appliances.query.get(purchase.item_id)
-        elif purchase.category == 'Stationery':
-            item = Stationery.query.get(purchase.item_id)
-
-        if item:
+    for purchase, furniture, shoes, appliances, stationery in purchases:
+        if furniture:
             purchased_items.append({
-                'category': purchase.category,
-                'item_id': purchase.item_id,
-                'item_name': getattr(item, item.__tablename__ + '_name'),  
-                'item_price': getattr(item, item.__tablename__ + '_price')  
+                'category': 'Furniture',
+                'item_name': furniture.furniture_name,
+                'item_price': furniture.furniture_price
+            })
+        elif shoes:
+            purchased_items.append({
+                'category': 'Shoes',
+                'item_name': shoes.shoes_name,
+                'item_price': shoes.shoes_price
+            })
+        elif appliances:
+            purchased_items.append({
+                'category': 'Appliances',
+                'item_name': appliances.appliance_name,
+                'item_price': appliances.appliance_price
+            })
+        elif stationery:
+            purchased_items.append({
+                'category': 'Stationery',
+                'item_name': stationery.stationery_name,
+                'item_price': stationery.stationery_price
             })
 
     return render_template('user_purchases.html', purchases=purchased_items)
+
 
 @app.route('/furniture', methods=['POST', 'GET'])
 def furniture():
     if request.method == 'POST':
         furniture_name = request.form.get('furniture_name')
         furniture_type = request.form.get('furniture_type')
+        furniture_quantity = request.form.get('furniture_quantity')
         furniture_weight = request.form.get('furniture_weight')
         furniture_price = request.form.get('furniture_price')
         
-        if furniture_name and furniture_type and furniture_weight and furniture_price:
+        if furniture_name and furniture_type and furniture_quantity and furniture_weight and furniture_price:
             try:
                 new_furniture = Furniture(
                     furniture_name=furniture_name,
                     furniture_type=furniture_type,
+                    furniture_quantity=furniture_quantity,
                     furniture_weight=float(furniture_weight),
                     furniture_price=float(furniture_price)
                 )
@@ -162,20 +189,23 @@ def furniture():
     furniture_items = Furniture.query.all()
     return render_template('furniture.html', furniture_items=furniture_items)
     
+    
 @app.route('/shoes', methods=['POST', 'GET'])
 def shoes():
     if request.method == 'POST':
         shoes_name = request.form.get('shoes_name')
+        shoes_quantity = request.form.get('shoes_quantity')
         shoes_brand = request.form.get('shoes_brand')
         shoes_size = request.form.get('shoes_size')
         shoes_gender = request.form.get('shoes_gender')
         shoes_color = request.form.get('shoes_color')
         shoes_price = request.form.get('shoes_price')
         
-        if shoes_name and shoes_brand and shoes_size and shoes_gender and shoes_color and shoes_price:
+        if shoes_name and shoes_quantity and shoes_brand and shoes_size and shoes_gender and shoes_color and shoes_price:
             try:
                 new_shoes = Shoes(
                     shoes_name=shoes_name,
+                    shoes_quantity=shoes_quantity,
                     shoes_brand=shoes_brand,
                     shoes_size=int(shoes_size),
                     shoes_gender=shoes_gender,
@@ -196,16 +226,18 @@ def shoes():
 def appliances():
     if request.method == 'POST':
         appliance_name = request.form.get('appliance_name')
+        appliance_quantity = request.form.get('appliance_quantity')
         appliance_type = request.form.get('appliance_type')
         appliance_brand = request.form.get('appliance_brand')
         appliance_weight = request.form.get('appliance_weight')
         appliance_voltage = request.form.get('appliance_voltage')
         appliance_price = request.form.get('appliance_price')
         
-        if appliance_name and appliance_type and appliance_brand and appliance_weight and appliance_voltage and appliance_price:
+        if appliance_name and appliance_quantity and appliance_type and appliance_brand and appliance_weight and appliance_voltage and appliance_price:
             try:
                 new_appliance = Appliances(
                     appliance_name=appliance_name,
+                    appliance_quantity=appliance_quantity,
                     appliance_type=appliance_type,
                     appliance_brand=appliance_brand,
                     appliance_weight=float(appliance_weight),
@@ -284,6 +316,7 @@ def furnitureUpdate(id):
     if request.method == 'POST':
         furniture_item.furniture_name = request.form.get('furniture_name')
         furniture_item.furniture_type = request.form.get('furniture_type')
+        furniture_item.furniture_quantity = int(request.form.get('furniture_quantity', 0))
         furniture_item.furniture_weight = float(request.form.get('furniture_weight', 0))
         furniture_item.furniture_price = float(request.form.get('furniture_price', 0))
 
@@ -302,6 +335,7 @@ def shoesUpdate(id):
 
     if request.method == 'POST':
         shoes_item.shoes_name = request.form.get('shoes_name')
+        shoes_item.shoes_quantity = int(request.form.get('shoes_quantity', 0))
         shoes_item.shoes_brand = request.form.get('shoes_brand')
         shoes_item.shoes_size = int(request.form.get('shoes_size', 0))
         shoes_item.shoes_gender = request.form.get('shoes_gender')
@@ -323,6 +357,7 @@ def appliancesUpdate(id):
 
     if request.method == 'POST':
         appliance_item.appliance_name = request.form.get('appliance_name')
+        appliance_item.appliance_quantity = int(request.form.get('appliance_quantity', 0))
         appliance_item.appliance_type = request.form.get('appliance_type')
         appliance_item.appliance_brand = request.form.get('appliance_brand')
         appliance_item.appliance_weight = float(request.form.get('appliance_weight', 0))
@@ -370,27 +405,35 @@ def buy(category, item_id):
     model = get_model_by_category(category)
     if model is None:
         return 'Invalid category', 404
-    
+
     item = model.query.get(item_id)
     if item is None:
         return 'Item not found', 404
 
-    purchase = Purchase(user_id=user_id, category=category, item_id=item_id)
-    db.session.add(purchase)
-    
-    user = User.query.get(user_id)
-    if user is None:
-        return 'User not found', 404
-    user.user_items_bought = user.user_items_bought + 1 if user.user_items_bought else 1
+    item_quantity_attribute = f'{category}_quantity'
+    if getattr(item, item_quantity_attribute) > 0:
+        setattr(item, item_quantity_attribute, getattr(item, item_quantity_attribute) - 1)
+        
+        purchase = Purchase(user_id=user_id, category=category.capitalize(), item_id=item_id)
+        db.session.add(purchase)
 
-    db.session.delete(item)
+        user = User.query.get(user_id)
+        if user is None:
+            return 'User not found', 404
+        user.user_items_bought = user.user_items_bought + 1 if user.user_items_bought else 1
 
-    try:
-        db.session.commit()
-        return redirect(url_for('store'))
-    except Exception as e:
-        db.session.rollback()
-        return f'An error occurred when processing the purchase: {e}', 500
+        if getattr(item, item_quantity_attribute) == 0:
+            db.session.delete(item)
+
+        try:
+            db.session.commit()
+            return redirect(url_for('store'))
+        except Exception as e:
+            db.session.rollback()
+            return f'An error occurred when processing the purchase: {e}', 500
+    else:
+        return 'This item is out of stock.', 403
+
 
 
 if __name__ == "__main__":

@@ -13,6 +13,7 @@
                 <a type='button' class="btn btn-danger" href="/admin-dashboard">Back</a>
                 <input type="text" name="furniture_name" placeholder="Furniture Name" required>
                 <input type="text" name="furniture_type" placeholder="Furniture Type" required>
+                <input type="number" name="furniture_quantity" placeholder="Quantity" required>
                 <input type="number" step="any" name="furniture_weight" placeholder="Weight" required>
                 <input type="number" step="any" name="furniture_price" placeholder="Price" required>
                 <input type="submit" class="btn btn-outline-success btn-sm" value="Add Entry">
@@ -25,6 +26,7 @@
             <th class="table-dark">ID</th>
             <th class="table-dark">Name</th>
             <th class="table-dark">Type</th>
+            <th class="table-dark">Quantity</th>
             <th class="table-dark">Weight</th>
             <th class="table-dark">Price</th>
             <th class="table-dark">Actions</th>
@@ -34,6 +36,7 @@
                 <td>{{ item.furniture_id }}</td>
                 <td>{{ item.furniture_name }}</td>
                 <td>{{ item.furniture_type }}</td>
+                <td>{{ item.furniture_quantity }}</td>
                 <td>{{ item.furniture_weight }} kg</td>
                 <td>₱ {{ item.furniture_price }}</td>
                 <td>

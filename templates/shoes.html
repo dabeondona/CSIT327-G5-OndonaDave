@@ -12,6 +12,7 @@
             <form action="/shoes" method="post">
                 <a type='button' class="btn btn-danger" href="/admin-dashboard">Back</a>
                 <input type="text" name="shoes_name" placeholder="Shoe Name" required>
+                <input type="number" name="shoes_quantity" placeholder="Quantity" required>
                 <input type="text" name="shoes_brand" placeholder="Brand" required>
                 <input type="number" name="shoes_size" placeholder="Size" required>
                 <input type="text" name="shoes_gender" placeholder="Gender" required>
@@ -26,6 +27,7 @@
         <tr>
             <th class="table-dark">ID</th>
             <th class="table-dark">Name</th>
+            <th class="table-dark">Quantity</th>
             <th class="table-dark">Brand</th>
             <th class="table-dark">Size</th>
             <th class="table-dark">Gender</th>
@@ -37,6 +39,7 @@
             <tr>
                 <td>{{ item.shoes_id }}</td>
                 <td>{{ item.shoes_name }}</td>
+                <td>{{ item.shoes_quantity }}</td>
                 <td>{{ item.shoes_brand }}</td>
                 <td>{{ item.shoes_size }}</td>
                 <td>{{ item.shoes_gender }}</td>

@@ -19,3 +19,16 @@ To push and pull to git hub do this:
 > git push origin main
     or  
 > git pull origin main
+
+
+Added database migration, to update your mysql database with features such as stored procedures,
+triggers, etc. use this:
+> flask db migrate -m "Commit Message Here"
+> flask db upgrade
+
+To update the requirements.txt with ur latest installed packages and its versions, do this:
+> pip freeze > requirements.txxt
+
+
+To install the said packages once you've pulled the latest changes from the remote repository, do this:
+> pip install -r requirements.txt
