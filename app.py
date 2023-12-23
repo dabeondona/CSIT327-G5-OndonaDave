@@ -129,6 +129,26 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login'))
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['user_name']
+
+        existing_user = User.query.filter_by(user_name=username).first()
+        if existing_user:
+            return 'Username already exists. Please choose a different one.'
+
+        new_user = User(user_name=username, user_items_bought=0)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('login'))
+        except Exception as e:
+            return f'An error occurred during registration: {e}'
+
+    return render_template('create_user.html')
+
     
 @app.route('/admin-dashboard')
 def index():
