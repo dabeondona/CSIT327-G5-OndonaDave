@@ -370,4 +370,137 @@ with app.app_context():
 
     except Exception as e:
         print(f"Error creating stored procedure: {e}")
+
+    # TRIGGERS
+-- Furniture Insert Trigger
+DELIMITER //
+ 
+CREATE TRIGGER furniture_insert_trigger AFTER INSERT ON Furniture
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Furniture (furniture_id, action, item_name, item_type)
+    VALUES (NEW.furniture_id, 'INSERT', NEW.furniture_name, NEW.furniture_type);
+END;
+//
+ 
+-- Furniture Update Trigger
+DELIMITER //
+ 
+CREATE TRIGGER furniture_update_trigger AFTER UPDATE ON Furniture
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Furniture (furniture_id, action, item_name, item_type)
+    VALUES (NEW.furniture_id, 'UPDATE', NEW.furniture_name, NEW.furniture_type);
+END;
+//
+ 
+-- Furniture Delete Trigger
+DELIMITER //
+ 
+CREATE TRIGGER furniture_delete_trigger AFTER DELETE ON Furniture
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Furniture (furniture_id, action, item_name, item_type)
+    VALUES (OLD.furniture_id, 'DELETE', OLD.furniture_name, OLD.furniture_type);
+END;
+//
+ 
+-- Shoes Insert Trigger
+DELIMITER //
+ 
+CREATE TRIGGER shoes_insert_trigger AFTER INSERT ON Shoes
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Shoes (shoes_id, action, item_name, item_brand, item_size, item_gender, item_color, item_price)
+    VALUES (NEW.shoes_id, 'INSERT', NEW.shoes_name, NEW.shoes_brand, NEW.shoes_size, NEW.shoes_gender, NEW.shoes_color, NEW.shoes_price);
+END;
+//
+ 
+-- Shoes Update Trigger
+DELIMITER //
+ 
+CREATE TRIGGER shoes_update_trigger AFTER UPDATE ON Shoes
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Shoes (shoes_id, action, item_name, item_brand, item_size, item_gender, item_color, item_price)
+    VALUES (NEW.shoes_id, 'UPDATE', NEW.shoes_name, NEW.shoes_brand, NEW.shoes_size, NEW.shoes_gender, NEW.shoes_color, NEW.shoes_price);
+END;
+//
+ 
+-- Shoes Delete Trigger
+DELIMITER //
+ 
+CREATE TRIGGER shoes_delete_trigger AFTER DELETE ON Shoes
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Shoes (shoes_id, action, item_name, item_brand, item_size, item_gender, item_color, item_price)
+    VALUES (OLD.shoes_id, 'DELETE', OLD.shoes_name, OLD.shoes_brand, OLD.shoes_size, OLD.shoes_gender, OLD.shoes_color, OLD.shoes_price);
+END;
+//
+ 
+-- Appliances Insert Trigger
+DELIMITER //
+ 
+CREATE TRIGGER appliances_insert_trigger AFTER INSERT ON Appliances
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Appliances (appliance_id, action, item_name, item_type, item_brand, item_weight, item_voltage, item_price)
+    VALUES (NEW.appliance_id, 'INSERT', NEW.appliance_name, NEW.appliance_type, NEW.appliance_brand, NEW.appliance_weight, NEW.appliance_voltage, NEW.appliance_price);
+END;
+//
+ 
+-- Appliances Update Trigger
+DELIMITER //
+ 
+CREATE TRIGGER appliances_update_trigger AFTER UPDATE ON Appliances
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Appliances (appliance_id, action, item_name, item_type, item_brand, item_weight, item_voltage, item_price)
+    VALUES (NEW.appliance_id, 'UPDATE', NEW.appliance_name, NEW.appliance_type, NEW.appliance_brand, NEW.appliance_weight, NEW.appliance_voltage, NEW.appliance_price);
+END;
+//
+ 
+-- Appliances Delete Trigger
+DELIMITER //
+ 
+CREATE TRIGGER appliances_delete_trigger AFTER DELETE ON Appliances
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Appliances (appliance_id, action, item_name, item_type, item_brand, item_weight, item_voltage, item_price)
+    VALUES (OLD.appliance_id, 'DELETE', OLD.appliance_name, OLD.appliance_type, OLD.appliance_brand, OLD.appliance_weight, OLD.appliance_voltage, OLD.appliance_price);
+END;
+//
+ 
+-- Stationery Insert Trigger
+DELIMITER //
+ 
+CREATE TRIGGER stationery_insert_trigger AFTER INSERT ON Stationery
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Stationery (stationery_id, action, item_name, item_type, item_brand, item_quantity, item_price)
+    VALUES (NEW.stationery_id, 'INSERT', NEW.stationery_name, NEW.stationery_type, NEW.stationery_brand, NEW.stationery_quantity, NEW.stationery_price);
+END;
+//
+ 
+-- Stationery Update Trigger
+DELIMITER //
+ 
+CREATE TRIGGER stationery_update_trigger AFTER UPDATE ON Stationery
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Stationery (stationery_id, action, item_name, item_type, item_brand, item_quantity, item_price)
+    VALUES (NEW.stationery_id, 'UPDATE', NEW.stationery_name, NEW.stationery_type, NEW.stationery_brand, NEW.stationery_quantity,  NEW.stationery_price);
+END;
+//
+ 
+-- Stationery Delete Trigger
+DELIMITER //
+ 
+CREATE TRIGGER stationery_delete_trigger AFTER UPDATE ON Stationery
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Stationery (stationery_id, action, item_name, item_type, item_brand, item_quantity, item_price)
+    VALUES (NEW.stationery_id, 'DELETE', NEW.stationery_name, NEW.stationery_type, NEW.stationery_brand, NEW.stationery_quantity,  NEW.stationery_price);
+END;
+//
         
