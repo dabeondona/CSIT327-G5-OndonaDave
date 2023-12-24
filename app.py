@@ -3,9 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import and_
 from sqlalchemy.sql import text
+from sqlalchemy import inspect  
+from datetime import datetime
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:NewPassword@localhost:3306/dbinformationmanagement'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost:3306/dbinformationmanagement'
 app.secret_key = 'dabeondona'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -93,6 +96,361 @@ class Purchase(db.Model):
 
     def __repr__(self):
         return f'<Purchase {self.id}>'
+
+
+
+# Create Furniture
+def create_furniture(name, furniture_type, weight, price):
+    try:
+        new_furniture = Furniture(
+            furniture_name=name,
+            furniture_type=furniture_type,
+            furniture_weight=weight,
+            furniture_price=price
+        )
+        db.session.add(new_furniture)
+        db.session.commit()
+
+        # Log the creation action
+        log_furniture_action(new_furniture.furniture_id, 'CREATE')
+        return True
+    except Exception as e:
+        print(f'Error creating furniture: {e}')
+        db.session.rollback()
+        return False
+
+# Read Furniture
+def get_all_furniture():
+    return Furniture.query.all()
+
+def get_furniture_by_id(furniture_id):
+    return Furniture.query.get(furniture_id)
+
+# Update Furniture
+def update_furniture_price(furniture_id, new_price):
+    try:
+        furniture = Furniture.query.get(furniture_id)
+        if furniture:
+            old_price = furniture.furniture_price
+            furniture.furniture_price = new_price
+            db.session.commit()
+
+            # Log the update action
+            log_furniture_price_update(furniture_id, old_price, new_price)
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f'Error updating furniture price: {e}')
+        db.session.rollback()
+        return False
+
+# Delete Furniture
+def delete_furniture(furniture_id):
+    try:
+        furniture = Furniture.query.get(furniture_id)
+        if furniture:
+            db.session.delete(furniture)
+            db.session.commit()
+
+            # Log the deletion action
+            log_furniture_action(furniture_id, 'DELETE')
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f'Error deleting furniture: {e}')
+        db.session.rollback()
+        return False
+
+# Audit Logging Functions for Furniture
+def log_furniture_action(furniture_id, action):
+    try:
+        new_audit_log = FurnitureAudit(
+            furniture_id=furniture_id,
+            action=action,
+            timestamp=datetime.now()
+        )
+        db.session.add(new_audit_log)
+        db.session.commit()
+    except Exception as e:
+        print(f'Error logging furniture action: {e}')
+        db.session.rollback()
+
+def log_furniture_price_update(furniture_id, old_price, new_price):
+    try:
+        action_details = f'Price updated from {old_price} to {new_price}'
+        new_audit_log = FurnitureAudit(
+            furniture_id=furniture_id,
+            action=action_details,
+            timestamp=datetime.now()
+        )
+        db.session.add(new_audit_log)
+        db.session.commit()
+    except Exception as e:
+        print(f'Error logging furniture price update: {e}')
+        db.session.rollback()
+
+
+# Create Shoes
+def create_shoes(name, brand, size, gender, color, price):
+    try:
+        new_shoes = Shoes(
+            shoes_name=name,
+            shoes_brand=brand,
+            shoes_size=size,
+            shoes_gender=gender,
+            shoes_color=color,
+            shoes_price=price
+        )
+        db.session.add(new_shoes)
+        db.session.commit()
+
+        # Log the creation action
+        log_shoes_action(new_shoes.shoes_id, 'CREATE')
+        return True
+    except Exception as e:
+        print(f'Error creating shoes: {e}')
+        db.session.rollback()
+        return False
+
+# Read Shoes
+def get_all_shoes():
+    return Shoes.query.all()
+
+def get_shoes_by_id(shoes_id):
+    return Shoes.query.get(shoes_id)
+
+# Update Shoes
+def update_shoes_price(shoes_id, new_price):
+    try:
+        shoes = Shoes.query.get(shoes_id)
+        if shoes:
+            old_price = shoes.shoes_price
+            shoes.shoes_price = new_price
+            db.session.commit()
+
+            # Log the update action
+            log_shoes_price_update(shoes_id, old_price, new_price)
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f'Error updating shoes price: {e}')
+        db.session.rollback()
+        return False
+
+# Delete Shoes
+def delete_shoes(shoes_id):
+    try:
+        shoes = Shoes.query.get(shoes_id)
+        if shoes:
+            db.session.delete(shoes)
+            db.session.commit()
+
+            # Log the deletion action
+            log_shoes_action(shoes_id, 'DELETE')
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f'Error deleting shoes: {e}')
+        db.session.rollback()
+        return False
+
+# Audit Logging Functions for Shoes
+def log_shoes_action(shoes_id, action):
+    try:
+        new_audit_log = ShoesAudit(
+            shoes_id=shoes_id,
+            action=action,
+            timestamp=datetime.now()
+        )
+        db.session.add(new_audit_log)
+        db.session.commit()
+    except Exception as e:
+        print(f'Error logging shoes action: {e}')
+        db.session.rollback()
+
+def log_shoes_price_update(shoes_id, old_price, new_price):
+    try:
+        action_details = f'Price updated from {old_price} to {new_price}'
+        new_audit_log = ShoesAudit(
+            shoes_id=shoes_id,
+            action=action_details,
+            timestamp=datetime.now()
+        )
+        db.session.add(new_audit_log)
+        db.session.commit()
+    except Exception as e:
+        print(f'Error logging shoes price update: {e}')
+        db.session.rollback()
+
+
+# Create Appliances
+def create_appliance(name, appliance_type, brand, weight, voltage, price):
+    try:
+        new_appliance = Appliances(
+            appliance_name=name,
+            appliance_type=appliance_type,
+            appliance_brand=brand,
+            appliance_weight=weight,
+            appliance_voltage=voltage,
+            appliance_price=price
+        )
+        db.session.add(new_appliance)
+        db.session.commit()
+
+        # Log the creation action
+        log_appliance_action(new_appliance.appliance_id, 'CREATE')
+        return True
+    except Exception as e:
+        print(f'Error creating appliance: {e}')
+        db.session.rollback()
+        return False
+
+# Read Appliances
+def get_all_appliances():
+    return Appliances.query.all()
+
+def get_appliance_by_id(appliance_id):
+    return Appliances.query.get(appliance_id)
+
+# Update Appliances
+def update_appliance_price(appliance_id, new_price):
+    try:
+        appliance = Appliances.query.get(appliance_id)
+        if appliance:
+            old_price = appliance.appliance_price
+            appliance.appliance_price = new_price
+            db.session.commit()
+
+            # Log the update action
+            log_appliance_price_update(appliance_id, old_price, new_price)
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f'Error updating appliance price: {e}')
+        db.session.rollback()
+        return False
+
+# Delete Appliances
+def delete_appliance(appliance_id):
+    try:
+        appliance = Appliances.query.get(appliance_id)
+        if appliance:
+            db.session.delete(appliance)
+            db.session.commit()
+
+            # Log the deletion action
+            log_appliance_action(appliance_id, 'DELETE')
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f'Error deleting appliance: {e}')
+        db.session.rollback()
+        return False
+
+# Audit Logging Functions for Appliances
+def log_appliance_action(appliance_id, action):
+    try:
+        new_audit_log = AppliancesAudit(
+            appliance_id=appliance_id,
+            action=action,
+            timestamp=datetime.now()
+        )
+        db.session.add(new_audit_log)
+        db.session.commit()
+    except Exception as e:
+        print(f'Error logging appliance action: {e}')
+        db.session.rollback()
+
+def log_appliance_price_update(appliance_id, old_price, new_price):
+    try:
+        action_details = f'Price updated from {old_price} to {new_price}'
+        new_audit_log = AppliancesAudit(
+            appliance_id=appliance_id,
+            action=action_details,
+            timestamp=datetime.now()
+        )
+        db.session.add(new_audit_log)
+        db.session.commit()
+    except Exception as e:
+        print(f'Error logging appliance price update: {e}')
+        db.session.rollback()
+
+
+# Create Stationery
+def create_stationery(name, brand, stationery_type, quantity, price):
+    try:
+        new_stationery = Stationery(
+            stationery_name=name,
+            stationery_brand=brand,
+            stationery_type=stationery_type,
+            stationery_quantity=quantity,
+            stationery_price=price
+        )
+        db.session.add(new_stationery)
+        db.session.commit()
+
+        # Log the creation action
+        log_stationery_action(new_stationery.stationery_id, 'CREATE')
+        return True
+    except Exception as e:
+        print(f'Error creating stationery: {e}')
+        db.session.rollback()
+        return False
+
+# Read Stationery
+def get_all_stationery():
+    return Stationery.query.all()
+
+def get_stationery_by_id(stationery_id):
+    return Stationery.query.get(stationery_id)
+
+# Update Stationery
+def update_stationery_price(stationery_id, new_price):
+    try:
+        stationery = Stationery.query.get(stationery_id)
+        if stationery:
+            old_price = stationery.stationery_price
+            stationery.stationery_price = new_price
+            db.session.commit()
+
+            # Log the update action
+            log_stationery_price_update(stationery_id, old_price, new_price)
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f'Error updating stationery price: {e}')
+        db.session.rollback()
+        return False
+
+
+# Delete Stationery
+def delete_stationery(stationery_id):
+    try:
+        stationery = Stationery.query.get(stationery_id)
+        if stationery:
+            db.session.delete(stationery)
+            db.session.commit()
+
+            # Log the deletion action
+            log_stationery_action(stationery_id, 'DELETE')
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f'Error deleting stationery: {e}')
+        db.session.rollback()
+        return False
+
+
+
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -484,5 +842,222 @@ def buy(category, item_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all() 
+
+        inspector = inspect(db.engine)
+        existing_views = inspector.get_view_names()
+
+        if 'category_summary' not in existing_views:
+            # SQL command to create the category_summary view
+            create_view_query = '''
+                CREATE 
+                    ALGORITHM = UNDEFINED 
+                    DEFINER = root@localhost
+                    SQL SECURITY DEFINER
+                VIEW `dbinformationmanagement`.`category_summary` AS
+                    SELECT 
+                        'Furniture' AS `category`, COUNT(0) AS `count`
+                    FROM
+                        `dbinformationmanagement`.`furniture` 
+                    UNION ALL SELECT 
+                        'Shoes' AS `Shoes`, COUNT(0) AS `COUNT(*)`
+                    FROM
+                        `dbinformationmanagement`.`shoes` 
+                    UNION ALL SELECT 
+                        'Appliances' AS `Appliances`, COUNT(0) AS `COUNT(*)`
+                    FROM
+                        `dbinformationmanagement`.`appliances` 
+                    UNION ALL SELECT 
+                        'Stationery' AS `Stationery`, COUNT(0) AS `COUNT(*)`
+                    FROM
+                        `dbinformationmanagement`.`stationery`
+                    ORDER BY `count` DESC;
+            '''
+            db.session.execute(text(create_view_query))
+            db.session.commit()
+
+
+        
+
+# Stored procedures
+with app.app_context():
+    try:
+        db.create_all()
+
+        # Check if InsertFurniture procedure exists before creating it
+        result = db.session.execute(text("SHOW PROCEDURE STATUS WHERE Db = 'dbinformationmanagement' AND Name = 'InsertFurniture'"))
+        procedure_exists = result.rowcount > 0
+
+        if not procedure_exists:
+            # Stored procedure: InsertFurniture
+            db.session.execute(text('''
+                CREATE PROCEDURE InsertFurniture(
+                    IN furniture_name VARCHAR(200),
+                    IN furniture_type VARCHAR(100),
+                    IN furniture_weight FLOAT,
+                    IN furniture_price FLOAT
+                )
+                BEGIN
+                    INSERT INTO Furniture (furniture_name, furniture_type, furniture_weight, furniture_price)
+                    VALUES (furniture_name, furniture_type, furniture_weight, furniture_price);
+                END;
+            '''))
+            db.session.commit()
+
+            
+
+    except Exception as e:
+        print(f"Error creating stored procedures: {e}")
+
+        # Stored procedure: UpdateFurniturePrice
+        db.session.execute(text('''
+            CREATE PROCEDURE UpdateFurniturePrice(
+                IN p_furniture_id INT,
+                IN p_new_price FLOAT
+            )
+            BEGIN
+                UPDATE Furniture
+                SET furniture_price = p_new_price
+                WHERE furniture_id = p_furniture_id;
+            END;
+        '''))
+
+        # Stored procedure: DeleteFurnitureById
+        db.session.execute(text('''
+            CREATE PROCEDURE DeleteFurnitureById(
+                IN p_furniture_id INT
+            )
+            BEGIN
+                DELETE FROM Furniture
+                WHERE furniture_id = p_furniture_id;
+            END;
+        '''))
+
+        # Stored procedure: InsertShoes
+        db.session.execute(text('''
+            CREATE PROCEDURE InsertShoes(
+                IN shoes_name VARCHAR(200),
+                IN shoes_brand VARCHAR(100),
+                IN shoes_size INT,
+                IN shoes_gender VARCHAR(50),
+                IN shoes_color VARCHAR(50),
+                IN shoes_price FLOAT
+            )
+            BEGIN
+                INSERT INTO Shoes (shoes_name, shoes_brand, shoes_size, shoes_gender, shoes_color, shoes_price)
+                VALUES (shoes_name, shoes_brand, shoes_size, shoes_gender, shoes_color, shoes_price);
+            END;
+        '''))
+
+        # Stored procedure: UpdateShoesPrice
+        db.session.execute(text('''
+            CREATE PROCEDURE UpdateShoesPrice(
+                IN shoes_id INT,
+                IN new_price FLOAT
+            )
+            BEGIN
+                UPDATE Shoes
+                SET shoes_price = new_price
+                WHERE shoes_id = shoes_id;
+            END;
+        '''))
+
+        # Stored procedure: DeleteShoesById
+        db.session.execute(text('''
+            CREATE PROCEDURE DeleteShoesById(
+                IN shoes_id INT
+            )
+            BEGIN
+                DELETE FROM Shoes
+                WHERE shoes_id = shoes_id;
+            END;
+        '''))
+
+        # Stored procedure: InsertAppliance
+        db.session.execute(text('''
+            CREATE PROCEDURE InsertAppliance(
+                IN appliance_name VARCHAR(200),
+                IN appliance_type VARCHAR(100),
+                IN appliance_brand VARCHAR(100),
+                IN appliance_weight FLOAT,
+                IN appliance_voltage INT,
+                IN appliance_price FLOAT
+            )
+            BEGIN
+                INSERT INTO Appliances (appliance_name, appliance_type, appliance_brand, appliance_weight, appliance_voltage, appliance_price)
+                VALUES (appliance_name, appliance_type, appliance_brand, appliance_weight, appliance_voltage, appliance_price);
+            END;
+        '''))
+
+        # Stored procedure: UpdateAppliancePrice
+        db.session.execute(text('''
+            CREATE PROCEDURE UpdateAppliancePrice(
+                IN appliance_id INT,
+                IN new_price FLOAT
+            )
+            BEGIN
+                UPDATE Appliances
+                SET appliance_price = new_price
+                WHERE appliance_id = appliance_id;
+            END;
+        '''))
+
+        # Stored procedure: DeleteApplianceById
+        db.session.execute(text('''
+            CREATE PROCEDURE DeleteApplianceById(
+                IN appliance_id INT
+            )
+            BEGIN
+                DELETE FROM Appliances
+                WHERE appliance_id = appliance_id;
+            END;
+        '''))
+
+        # Stored procedure: InsertStationery
+        db.session.execute(text('''
+            CREATE PROCEDURE InsertStationery(
+                IN stationery_name VARCHAR(200),
+                IN stationery_brand VARCHAR(100),
+                IN stationery_type VARCHAR(100),
+                IN stationery_quantity INT,
+                IN stationery_price FLOAT
+            )
+            BEGIN
+                INSERT INTO Stationery (stationery_name, stationery_brand, stationery_type, stationery_quantity, stationery_price)
+                VALUES (stationery_name, stationery_brand, stationery_type, stationery_quantity, stationery_price);
+            END;
+        '''))
+
+        # Stored procedure: UpdateStationeryPrice
+        db.session.execute(text('''
+            CREATE PROCEDURE UpdateStationeryPrice(
+                IN stationery_id INT,
+                IN new_price FLOAT
+            )
+            BEGIN
+                UPDATE Stationery
+                SET stationery_price = new_price
+                WHERE stationery_id = stationery_id;
+            END;
+        '''))
+
+        # Stored procedure: DeleteStationeryById
+        db.session.execute(text('''
+            CREATE PROCEDURE DeleteStationeryById(
+                IN stationery_id INT
+            )
+            BEGIN
+                DELETE FROM Stationery
+                WHERE stationery_id = stationery_id;
+            END;
+        '''))
+
+        db.session.commit()
+
+    except Exception as e:
+        print(f"Error creating stored procedure: {e}")
+
+    
+
+
     app.run(debug=True)
     app.logger.debug(f'Current quantity of item {item_id} is {current_quantity}')
