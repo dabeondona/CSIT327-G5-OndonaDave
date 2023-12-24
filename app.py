@@ -97,7 +97,33 @@ class Purchase(db.Model):
     def __repr__(self):
         return f'<Purchase {self.id}>'
 
-
+# Create Audit Table for Furniture
+class FurnitureAudit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    furniture_id = db.Column(db.Integer)
+    action = db.Column(db.String(50))
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+ 
+# Create Audit Table for Shoes
+class ShoesAudit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    shoes_id = db.Column(db.Integer)
+    action = db.Column(db.String(50))
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+ 
+# Create Audit Table for Appliances
+class AppliancesAudit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    appliance_id = db.Column(db.Integer)
+    action = db.Column(db.String(50))
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+ 
+# Create Audit Table for Stationery
+class StationeryAudit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    stationery_id = db.Column(db.Integer)
+    action = db.Column(db.String(50))
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 # Create Furniture
 def create_furniture(name, furniture_type, weight, price):
